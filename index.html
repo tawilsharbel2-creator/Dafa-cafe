@@ -1,263 +1,712 @@
-\<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dafa Café</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arabe</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-/* ===== FULL PAGE BACKGROUND ===== */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: #fff;
-  background:
-    linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)),
-    url("https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1600&q=80")
-    no-repeat center center fixed;
-  background-size: cover;
-}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:#d7d0c7;
+    color:#2f2a26;
+    overflow-x:hidden;
+  }
 
-/* ===== HEADER (TOP) BACKGROUND ===== */
-header {
-  background:
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-    url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80")
-    no-repeat center center;
-  background-size: cover;
-  padding: 40px 20px;
-  text-align: center;
-}
+  /* NAV */
+  nav{
+    position:fixed; top:0; width:100%;
+    padding:16px 60px;
+    background:#e3dbd1;
+    box-shadow:0 2px 10px rgba(0,0,0,.10);
+    z-index:1000;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  nav h2{font-family:'Playfair Display',serif; letter-spacing:1px;}
 
-header h1 {
-  color: orange;
-  margin: 0;
-  font-size: 32px;
-}
+  .nav-actions{display:flex; gap:10px; align-items:center;}
+  .pill{
+    display:inline-block;
+    padding:10px 16px;
+    border-radius:999px;
+    background:#7a4f2b;
+    color:#fff;
+    text-decoration:none;
+    font-size:14px;
+    transition:.25s ease;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+    cursor:pointer;
+    user-select:none;
+  }
+  .pill:hover{transform:translateY(-2px); background:#5c3c20;}
 
-.lang-toggle {
-  margin-top: 10px;
-}
+  /* PAGES */
+  .page{display:none;}
+  .active{display:block;}
 
-.lang-toggle button {
-  background: orange;
-  border: none;
-  padding: 6px 12px;
-  margin: 0 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
+  /* HERO */
+  .hero{
+    height:82vh;
+    background:
+      linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
+      url("https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1600&q=80");
+    background-size:cover;
+    background-position:center;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    padding-top:60px;
+  }
+  .hero h1{
+    font-family:'Playfair Display',serif;
+    font-size:72px;
+    color:#fff;
+    letter-spacing:2px;
+    animation:fadeUp 1s ease both;
+  }
 
-section {
-  padding: 20px;
-  max-width: 900px;
-  margin: auto;
-}
+  section{
+    padding:110px 70px;
+    max-width:1200px;
+    margin:auto;
+  }
+  section h2{
+    font-family:'Playfair Display',serif;
+    font-size:38px;
+    margin-bottom:50px;
+    color:#2f2a26;
+  }
 
-h2 {
-  color: orange;
-  border-bottom: 2px solid orange;
-  padding-bottom: 5px;
-}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:38px;
+  }
 
-/* ===== MENU ACCORDION ===== */
-.accordion {
-  background: #111;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  overflow: hidden;
-}
+  .card{
+    background:#efe7de;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 28px rgba(0,0,0,.14);
+    transition:.35s ease;
+    cursor:pointer;
+    opacity:0;
+    transform:translateY(24px);
+    animation:fadeUp .8s ease forwards;
+    position:relative;
+  }
+  .card:nth-child(2){animation-delay:.15s;}
+  .card:nth-child(3){animation-delay:.30s;}
+  .card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 22px 45px rgba(0,0,0,.18);
+  }
+  .card img{width:100%;height:220px;object-fit:cover;}
+  .card-content{padding:26px;}
+  .card-content p{margin-top:8px;color:#6f665e;}
 
-.accordion-header {
-  padding: 15px;
-  cursor: pointer;
-  background: #000;
-  font-weight: bold;
-}
+  /* COMING SOON overlay */
+  .coming-soon{cursor:default;}
+  .coming-soon img{filter:saturate(1.05) contrast(1.05);}
+  .coming-overlay{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    justify-content:flex-end;
+    padding:22px;
+    background:linear-gradient(to top, rgba(0,0,0,.60), rgba(0,0,0,.08));
+  }
+  .coming-overlay .tag{
+    align-self:flex-start;
+    padding:8px 14px;
+    border-radius:999px;
+    background:rgba(245,237,229,.92);
+    color:#2f2a26;
+    font-weight:700;
+    letter-spacing:1px;
+    font-size:12px;
+  }
+  .coming-overlay .subtitle{
+    margin-top:10px;
+    color:#f4ede5;
+    font-size:14px;
+    opacity:.95;
+  }
 
-.accordion-header:hover {
-  background: orange;
-  color: #000;
-}
+  /* DONATE (clean — removes weird 3 dots overlay) */
+  .donate-wrap{
+    margin-top:55px;
+    display:flex;
+    justify-content:center;
+  }
+  .donate-btn{
+    display:inline-block;
+    padding:16px 28px;
+    border-radius:999px;
+    background:#2f2a26;
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+    letter-spacing:.6px;
+    box-shadow:0 12px 26px rgba(0,0,0,.18);
+    transition:.25s ease;
+    position:relative;
+    z-index:5;
+  }
+  .donate-btn:hover{transform:translateY(-2px); background:#1f1b18;}
 
-.accordion-content {
-  display: none;
-  padding: 15px;
-  background: #1a1a1a;
-}
+  footer{
+    padding:55px;
+    text-align:center;
+    color:#6f665e;
+    border-top:1px solid rgba(0,0,0,.08);
+    background:#ded6cd;
+  }
 
-.menu-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px dashed #333;
-}
+  /* DAFA PAGE */
+  .dafa-bg{
+    min-height:100vh;
+    padding-top:90px;
+    background:
+      linear-gradient(rgba(15,10,6,.70), rgba(15,10,6,.70)),
+      url("https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1600&q=80");
+    background-size:cover;
+    background-position:center;
+  }
+  .page-title{
+    text-align:center;
+    color:#f4ede5;
+    margin:25px 0 40px;
+    animation:fadeUp 1s ease both;
+  }
+  .page-title h1{
+    font-family:'Playfair Display',serif;
+    font-size:54px;
+    letter-spacing:1px;
+  }
+  .page-title p{opacity:.88; margin-top:10px;}
 
-/* ===== CLEAN GALLERY ===== */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-}
+  .menu-wrap{
+    max-width:1100px;
+    margin:0 auto 70px;
+    padding:0 20px;
+  }
+  .menu-board{
+    background:rgba(245, 237, 229, 0.94);
+    border-radius:18px;
+    padding:42px;
+    box-shadow:0 25px 70px rgba(0,0,0,.45);
+    animation:fadeUp 1.1s ease both;
+  }
+  .menu-board h2{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    color:#3d2f22;
+    font-size:34px;
+    margin-bottom:12px;
+    letter-spacing:1px;
+  }
 
-.gallery img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 8px;
-}
+  /* Location bar */
+  .loc-bar{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:14px 0 26px;
+  }
+  .loc-pill{
+    padding:10px 14px;
+    border-radius:999px;
+    background:#2f2a26;
+    color:#fff;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+  }
+  .loc-pill:hover{transform:translateY(-2px); background:#1f1b18;}
 
-iframe {
-  width: 100%;
-  height: 350px;
-  border: 0;
-}
+  .menu-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:26px;
+    margin-top:12px;
+  }
 
-/* ===== FLOATING BUTTONS ===== */
-.buttons {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-}
+  /* Menu section base */
+  .menu-section{
+    position:relative;
+    padding:18px 18px 10px;
+    border:1px solid rgba(0,0,0,.10);
+    border-radius:14px;
+    background:rgba(255,255,255,.38);
+    overflow:hidden;
+  }
 
-.buttons a {
-  display: block;
-  margin-bottom: 10px;
-  padding: 12px 18px;
-  background: orange;
-  color: #000;
-  text-decoration: none;
-  border-radius: 30px;
-  font-weight: bold;
-  text-align: center;
-}
+  /* Background image inside each section */
+  .menu-section::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+    opacity:.14;
+    filter:grayscale(.15) contrast(1.05);
+    transform:scale(1.06);
+    pointer-events:none;
+  }
+  .menu-section::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to bottom, rgba(255,255,255,.55), rgba(255,255,255,.20));
+    pointer-events:none;
+  }
+  .menu-section > *{position:relative; z-index:2;}
 
-/* ===== FOOTER ===== */
-footer {
-  text-align: center;
-  padding: 15px;
-  background: #000;
-  color: #aaa;
-}
+  .menu-section h3{
+    font-family:'Playfair Display',serif;
+    font-size:18px;
+    letter-spacing:.6px;
+    color:#2f2a26;
+    margin-bottom:14px;
+    text-transform:uppercase;
+  }
+
+  .row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:8px 0;
+    border-bottom:1px dashed rgba(0,0,0,.14);
+  }
+  .row:last-child{border-bottom:none;}
+  .item{font-size:14px;}
+  .price{font-weight:700; color:#7a4f2b; font-size:14px; white-space:nowrap;}
+
+  /* Backgrounds per slot */
+  .bg-cold::before{background-image:url("https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=1200&q=80");}
+  .bg-special::before{background-image:url("https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1200&q=80");}
+  .bg-slash::before{background-image:url("https://images.unsplash.com/photo-1467453678174-768ec283a940?auto=format&fit=crop&w=1200&q=80");}
+  .bg-dessert::before{background-image:url("https://images.unsplash.com/photo-1464347744102-11db6282f854?auto=format&fit=crop&w=1200&q=80");}
+  /* ✅ Juices background (guaranteed) */
+  .bg-juices::before{background-image:url("https://images.unsplash.com/photo-1542444459-db47a03ba75a?auto=format&fit=crop&w=1200&q=80");}
+  .bg-milkshakes::before{background-image:url("https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=1200&q=80");}
+  .bg-hot::before{background-image:url("https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80");}
+  .bg-extras::before{background-image:url("https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1200&q=80");}
+
+  /* QR section */
+  .qr-area{
+    margin-top:26px;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .qr-card{
+    width:260px;
+    background:rgba(255,255,255,.55);
+    border:1px solid rgba(0,0,0,.10);
+    border-radius:14px;
+    padding:16px;
+    text-align:center;
+  }
+  .qr-card h4{
+    font-family:'Playfair Display',serif;
+    font-size:16px;
+    margin-bottom:10px;
+    color:#2f2a26;
+  }
+  .qr-card img{
+    width:160px;height:160px;
+    border-radius:10px;
+    box-shadow:0 10px 22px rgba(0,0,0,.12);
+  }
+  .qr-card p{
+    margin-top:10px;
+    color:#6f665e;
+    font-size:12px;
+    line-height:1.35;
+  }
+
+  .back{
+    display:flex;
+    justify-content:center;
+    margin-top:22px;
+  }
+  .back .pill{background:#2f2a26;}
+  .back .pill:hover{background:#1f1b18;}
+
+  /* BERLIN PAGE (COUNTDOWN) */
+  .berlin-bg{
+    min-height:100vh;
+    padding-top:90px;
+    background:
+      linear-gradient(rgba(25,18,12,.72), rgba(25,18,12,.72)),
+      url("https://images.unsplash.com/photo-1520975958225-6d0f8b06b7f0?auto=format&fit=crop&w=1600&q=80");
+    background-size:cover;
+    background-position:center;
+  }
+  .countdown-wrap{
+    max-width:900px;
+    margin:0 auto;
+    padding:0 20px 70px;
+  }
+  .count-card{
+    background:rgba(245, 237, 229, 0.93);
+    border-radius:18px;
+    padding:44px 34px;
+    box-shadow:0 25px 70px rgba(0,0,0,.45);
+    text-align:center;
+    animation:fadeUp 1.1s ease both;
+  }
+  .count-card h2{
+    font-family:'Playfair Display',serif;
+    font-size:40px;
+    color:#2f2a26;
+  }
+  .count-card p{color:#6f665e; margin-top:10px;}
+
+  .timer{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:26px;
+    flex-wrap:wrap;
+  }
+  .tbox{
+    width:120px;
+    background:#fff;
+    border-radius:14px;
+    padding:16px 10px;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+  }
+  .tbox .num{
+    font-size:34px;
+    font-weight:800;
+    color:#7a4f2b;
+  }
+  .tbox .lbl{
+    font-size:12px;
+    letter-spacing:1px;
+    color:#6f665e;
+    margin-top:6px;
+    text-transform:uppercase;
+  }
+
+  /* CONTACT MODAL */
+  .modal{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:2000;
+    padding:20px;
+  }
+  .modal.show{display:flex;}
+  .modal-card{
+    width:min(520px, 100%);
+    background:#efe7de;
+    border-radius:18px;
+    padding:26px;
+    box-shadow:0 25px 70px rgba(0,0,0,.35);
+    animation:fadeUp .5s ease both;
+  }
+  .modal-card h3{
+    font-family:'Playfair Display',serif;
+    font-size:26px;
+    margin-bottom:10px;
+  }
+  .modal-card p{color:#6f665e; margin-bottom:16px;}
+  .actions{display:flex; gap:10px; flex-wrap:wrap;}
+  .close{background:#2f2a26;}
+
+  /* ANIM */
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(22px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  @media(max-width:900px){
+    nav{padding:16px 22px;}
+    section{padding:100px 22px;}
+    .hero h1{font-size:44px;}
+    .menu-grid{grid-template-columns:1fr;}
+  }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>DAFA CAFÉ</h1>
-  <p id="subtitle">Modern Coffee • Drinks • Chill</p>
-  <div class="lang-toggle">
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('ar')">AR</button>
+<nav>
+  <h2>Arabe</h2>
+  <div class="nav-actions">
+    <span class="pill" onclick="openContact()">Contact</span>
   </div>
-</header>
+</nav>
 
-<section>
-<h2 id="menuTitle">Menu</h2>
+<!-- HOME PAGE -->
+<div id="home" class="page active">
+  <div class="hero">
+    <h1>Arabe</h1>
+  </div>
 
-<div class="accordion">
-  <div class="accordion-header">Espresso / Hot Drinks</div>
-  <div class="accordion-content">
-    <div class="menu-item"><span>Espresso</span><span>—</span></div>
-    <div class="menu-item"><span>Double Espresso</span><span>—</span></div>
-    <div class="menu-item"><span>Americano</span><span>—</span></div>
-    <div class="menu-item"><span>Cappuccino</span><span>—</span></div>
-    <div class="menu-item"><span>Latte</span><span>—</span></div>
-    <div class="menu-item"><span>Mocha</span><span>—</span></div>
+  <section>
+    <h2>Concepts</h2>
+
+    <div class="grid">
+      <div class="card" onclick="openDafa()">
+        <img src="box1.png" alt="Dafa Cafe">
+        <div class="card-content">
+          <h3>Dafa Café</h3>
+          <p>Warm space for students and professionals</p>
+        </div>
+      </div>
+
+      <div class="card" onclick="openBerlin()">
+        <img src="box2.png" alt="Berlin">
+        <div class="card-content">
+          <h3>Berlin</h3>
+          <p>Countdown to opening</p>
+        </div>
+      </div>
+
+      <div class="card coming-soon">
+        <img
+          src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1400&q=80"
+          alt="Coming Soon Café"
+        >
+        <div class="coming-overlay">
+          <div class="tag">COMING SOON</div>
+          <div class="subtitle">A new café concept is brewing</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="donate-wrap">
+      <a class="donate-btn" href="https://your-donate-link.com" target="_blank" rel="noopener">DONATE</a>
+    </div>
+
+  </section>
+
+  <footer>© 2026 Arabe</footer>
+</div>
+
+<!-- DAFA PAGE -->
+<div id="dafa" class="page dafa-bg">
+  <div class="page-title">
+    <h1>Dafa Café</h1>
+    <p>Main Road — Dahr El Ahmar</p>
+  </div>
+
+  <div class="menu-wrap">
+    <div class="menu-board">
+      <h2>MENU</h2>
+
+      <!-- ✅ Correct Instagram + ✅ Maps Search that finds Dafa Café -->
+      <div class="loc-bar">
+        <a class="loc-pill"
+           href="https://www.google.com/maps/search/?api=1&query=DAFE%20CAFE%2C%20main%20road%2C%20Dahr%20El%20Ahmar"
+           target="_blank" rel="noopener">Open Location in Maps</a>
+        <a class="loc-pill"
+           href="https://instagram.com/dafa__cafe"
+           target="_blank" rel="noopener">Instagram @dafa__cafe</a>
+      </div>
+
+      <div class="menu-grid">
+
+        <div class="menu-section bg-cold">
+          <h3>Cold Drinks</h3>
+          <div class="row"><div class="item">Dark Blue</div><div class="price">$1</div></div>
+          <div class="row"><div class="item">Sparkling Water</div><div class="price">$1.5</div></div>
+          <div class="row"><div class="item">Green tea soda</div><div class="price">$3.5</div></div>
+          <div class="row"><div class="item">Iced Latte</div><div class="price">$3.5</div></div>
+          <div class="row"><div class="item">Iced Latte lotus</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Iced Latte caramel</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Soda Drinks</div><div class="price">$1</div></div>
+          <div class="row"><div class="item">Spanish Latte</div><div class="price">$3.5</div></div>
+          <div class="row"><div class="item">Black Orange</div><div class="price">$3.5</div></div>
+          <div class="row"><div class="item">Iced Vanilla Cappuccino</div><div class="price">$3.5</div></div>
+          <div class="row"><div class="item">Iced Coffee</div><div class="price">$3.5</div></div>
+          <div class="row"><div class="item">Iced Caramel Macchiato</div><div class="price">$3.5</div></div>
+          <div class="row"><div class="item">Iced Chocolate</div><div class="price">$3.5</div></div>
+          <div class="row"><div class="item">Iced Mocha Chocolate</div><div class="price">$3.5</div></div>
+        </div>
+
+        <div class="menu-section bg-special">
+          <h3>Dafa Special Drinks</h3>
+          <div class="row"><div class="item">Blue Hawaii</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Grenadine Sprite</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Passion fruit sprite</div><div class="price">$2.5</div></div>
+          <div class="row"><div class="item">Pinacolada</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">French Coffee</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Avocado</div><div class="price">$5</div></div>
+        </div>
+
+        <div class="menu-section bg-slash">
+          <h3>Slash</h3>
+          <div class="row"><div class="item">Strawberries</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Passion fruit</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Mix berry</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Pineapple</div><div class="price">$2</div></div>
+        </div>
+
+        <div class="menu-section bg-dessert">
+          <h3>Deserts</h3>
+          <div class="row"><div class="item">Up-Down Cheesecake</div><div class="price">$5</div></div>
+          <div class="row"><div class="item">Cookie Skillet</div><div class="price">$3</div></div>
+          <div class="row"><div class="item">Tiramisu Ball</div><div class="price">$5</div></div>
+          <div class="row"><div class="item">Cinabon</div><div class="price">$3</div></div>
+        </div>
+
+        <div class="menu-section bg-juices">
+          <h3>Juices</h3>
+          <div class="row"><div class="item">Orange</div><div class="price">$2.5</div></div>
+          <div class="row"><div class="item">Carrot</div><div class="price">$2.5</div></div>
+          <div class="row"><div class="item">Strawberry</div><div class="price">$2.5</div></div>
+          <div class="row"><div class="item">Mango</div><div class="price">$2.5</div></div>
+          <div class="row"><div class="item">Passion fruit</div><div class="price">$2.5</div></div>
+          <div class="row"><div class="item">Lemon & Strawberry</div><div class="price">$2.5</div></div>
+          <div class="row"><div class="item">Dafa Lemon</div><div class="price">$2.5</div></div>
+        </div>
+
+        <div class="menu-section bg-milkshakes">
+          <h3>Milkshakes</h3>
+          <div class="row"><div class="item">Nutella</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Lotus</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Strawberry</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Vanilla</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Chocolate</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Oreo cacao</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Strawberry cacao</div><div class="price">$4</div></div>
+        </div>
+
+        <div class="menu-section bg-hot">
+          <h3>Hot Drinks</h3>
+          <div class="row"><div class="item">Coffee</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Espresso</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Cappuccino</div><div class="price">$2</div></div>
+          <div class="row"><div class="item">Herbal Tea</div><div class="price">$1</div></div>
+          <div class="row"><div class="item">Maté</div><div class="price">$5</div></div>
+          <div class="row"><div class="item">Hot Chocolate</div><div class="price">$2.5</div></div>
+          <div class="row"><div class="item">Mocha Chocolate</div><div class="price">$2</div></div>
+        </div>
+
+        <div class="menu-section bg-extras">
+          <h3>Extras</h3>
+          <div class="row"><div class="item">Shisha</div><div class="price">$4</div></div>
+          <div class="row"><div class="item">Change</div><div class="price">$2.5</div></div>
+        </div>
+
+      </div>
+
+      <!-- QR CODES -->
+      <div class="qr-area">
+        <div class="qr-card">
+          <h4>Scan to Follow</h4>
+          <img alt="Instagram QR"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Finstagram.com%2Fdafa__cafe">
+          <p>Instagram<br><b>@dafa__cafe</b></p>
+        </div>
+
+        <div class="qr-card">
+          <h4>Scan for Location</h4>
+          <img alt="Location QR"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1%26query%3DDAFE%2520CAFE%252C%2520main%2520road%252C%2520Dahr%2520El%2520Ahmar">
+          <p>Google Maps Search<br><b>Dafa Café</b></p>
+        </div>
+      </div>
+
+      <div class="back">
+        <span class="pill" onclick="goHome()">Back to Arabe</span>
+      </div>
+
+    </div>
   </div>
 </div>
 
-<div class="accordion">
-  <div class="accordion-header">Iced Coffee</div>
-  <div class="accordion-content">
-    <div class="menu-item"><span>Iced Latte</span><span>—</span></div>
-    <div class="menu-item"><span>Iced Mocha</span><span>—</span></div>
-    <div class="menu-item"><span>Iced Caramel</span><span>—</span></div>
-    <div class="menu-item"><span>Iced Spanish Latte</span><span>—</span></div>
+<!-- BERLIN PAGE -->
+<div id="berlin" class="page berlin-bg">
+  <div class="page-title">
+    <h1>Berlin</h1>
+    <p>Opening soon — countdown below</p>
+  </div>
+
+  <div class="countdown-wrap">
+    <div class="count-card">
+      <h2>We’re almost there</h2>
+      <p>Countdown to launch</p>
+
+      <div class="timer">
+        <div class="tbox"><div class="num" id="d">00</div><div class="lbl">Days</div></div>
+        <div class="tbox"><div class="num" id="h">00</div><div class="lbl">Hours</div></div>
+        <div class="tbox"><div class="num" id="m">00</div><div class="lbl">Minutes</div></div>
+        <div class="tbox"><div class="num" id="s">00</div><div class="lbl">Seconds</div></div>
+      </div>
+
+      <div class="back" style="margin-top:24px;">
+        <span class="pill" onclick="goHome()">Back to Arabe</span>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="accordion">
-  <div class="accordion-header">Milkshakes</div>
-  <div class="accordion-content">
-    <div class="menu-item"><span>Chocolate</span><span>—</span></div>
-    <div class="menu-item"><span>Vanilla</span><span>—</span></div>
-    <div class="menu-item"><span>Strawberry</span><span>—</span></div>
-    <div class="menu-item"><span>Oreo</span><span>—</span></div>
+<!-- CONTACT MODAL -->
+<div id="modal" class="modal" onclick="closeIfOutside(event)">
+  <div class="modal-card">
+    <h3>Contact</h3>
+    <p>Choose how you want to reach us.</p>
+    <div class="actions">
+      <a class="pill" href="tel:+96181916383">Call: +961 81 916 383</a>
+      <a class="pill" href="https://instagram.com/dafa__cafe" target="_blank" rel="noopener">Instagram: @dafa__cafe</a>
+      <span class="pill close" onclick="closeContact()">Close</span>
+    </div>
   </div>
 </div>
-
-<div class="accordion">
-  <div class="accordion-header">Smoothies</div>
-  <div class="accordion-content">
-    <div class="menu-item"><span>Mango</span><span>—</span></div>
-    <div class="menu-item"><span>Strawberry Banana</span><span>—</span></div>
-    <div class="menu-item"><span>Mixed Berries</span><span>—</span></div>
-  </div>
-</div>
-
-<div class="accordion">
-  <div class="accordion-header">Frappes</div>
-  <div class="accordion-content">
-    <div class="menu-item"><span>Mocha Frappe</span><span>—</span></div>
-    <div class="menu-item"><span>Caramel Frappe</span><span>—</span></div>
-    <div class="menu-item"><span>Chocolate Frappe</span><span>—</span></div>
-  </div>
-</div>
-</section>
-
-<section>
-<h2 id="galleryTitle">Gallery</h2>
-<div class="gallery">
-  <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=80">
-  <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80">
-  <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80">
-</div>
-</section>
-
-<section>
-<h2 id="hoursTitle">Opening Hours</h2>
-<p>Saturday – Friday<br>9:15 AM – 11:00 PM</p>
-</section>
-
-<section>
-<h2 id="locationTitle">Location</h2>
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13303.37479212375!2d35.8320545!3d33.5314492!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151ed50054443597%3A0x263c8f1484467c9d!2sDAFE%20CAFE!5e0!3m2!1sen!2slb!4v1768039286981"></iframe>
-</section>
-
-<div class="buttons">
-  <a href="https://wa.me/96181916383" target="_blank">WhatsApp</a>
-  <a href="https://instagram.com/dafa__cafe" target="_blank">Instagram</a>
-</div>
-
-<footer>© 2026 Dafa Café</footer>
 
 <script>
-/* Accordion */
-const headers = document.querySelectorAll(".accordion-header");
-headers.forEach(header => {
-  header.addEventListener("click", () => {
-    headers.forEach(h => {
-      if (h !== header) h.nextElementSibling.style.display = "none";
-    });
-    const content = header.nextElementSibling;
-    content.style.display = content.style.display === "block" ? "none" : "block";
-  });
-});
+  // Page switching
+  function show(id){
+    ["home","dafa","berlin"].forEach(p=>document.getElementById(p).classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo(0,0);
+  }
+  function openDafa(){ show("dafa"); }
+  function openBerlin(){ show("berlin"); }
+  function goHome(){ show("home"); }
 
-/* Language toggle */
-function setLang(lang) {
-  document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.getElementById("menuTitle").innerText = lang === 'ar' ? 'القائمة' : 'Menu';
-  document.getElementById("galleryTitle").innerText = lang === 'ar' ? 'المعرض' : 'Gallery';
-  document.getElementById("hoursTitle").innerText = lang === 'ar' ? 'ساعات العمل' : 'Opening Hours';
-  document.getElementById("locationTitle").innerText = lang === 'ar' ? 'الموقع' : 'Location';
-  document.getElementById("subtitle").innerText =
-    lang === 'ar' ? 'قهوة • مشروبات • أجواء هادئة' : 'Modern Coffee • Drinks • Chill';
-}
+  // Contact modal
+  function openContact(){ document.getElementById("modal").classList.add("show"); }
+  function closeContact(){ document.getElementById("modal").classList.remove("show"); }
+  function closeIfOutside(e){
+    if(e.target.id === "modal") closeContact();
+  }
+
+  // Countdown (change date if you want)
+  const launchDate = new Date("2026-06-01T00:00:00");
+  function pad(n){ return String(n).padStart(2,"0"); }
+
+  function tick(){
+    const now = new Date();
+    let diff = launchDate - now;
+    if(diff < 0) diff = 0;
+
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor((diff / (1000*60*60)) % 24);
+    const mins = Math.floor((diff / (1000*60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("d").textContent = pad(days);
+    document.getElementById("h").textContent = pad(hours);
+    document.getElementById("m").textContent = pad(mins);
+    document.getElementById("s").textContent = pad(secs);
+  }
+
+  tick();
+  setInterval(tick, 1000);
 </script>
 
 </body>
 </html>
-
